@@ -1,0 +1,922 @@
+[33mcommit f426e44a1c41c8e1fcb2cd8deb077b01303d86c4[m
+Author: Liao <reknew@hotmail.com>
+Date:   Thu Mar 3 20:03:14 2016 +0800
+
+    Add SQLiteOPenHelper class.
+
+[1mdiff --git a/src/so/reknew/xweather/db/XWeatherOpenHelper.java b/src/so/reknew/xweather/db/XWeatherOpenHelper.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..9e89f2d[m
+[1m--- /dev/null[m
+[1m+++ b/src/so/reknew/xweather/db/XWeatherOpenHelper.java[m
+[36m@@ -0,0 +1,39 @@[m
+[32m+[m[32mpackage so.reknew.xweather.db;[m
+[32m+[m
+[32m+[m[32mimport android.content.Context;[m
+[32m+[m[32mimport android.database.sqlite.SQLiteDatabase;[m
+[32m+[m[32mimport android.database.sqlite.SQLiteDatabase.CursorFactory;[m
+[32m+[m[32mimport android.database.sqlite.SQLiteOpenHelper;[m
+[32m+[m
+[32m+[m[32mpublic class XWeatherOpenHelper extends SQLiteOpenHelper {[m
+[32m+[m
+[32m+[m	[32mpublic static final String PROVINCE = "create table Province ("[m
+[32m+[m			[32m+ "id integer primary key autoincrement, "[m
+[32m+[m			[32m+ "province_name text, "[m
+[32m+[m			[32m+ "province_code, text )";[m
+[32m+[m	[32mpublic static final String CITY = "create table City ("[m
+[32m+[m			[32m+ "id integer primary key autoincrement, "[m
+[32m+[m			[32m+ "city_name text, "[m
+[32m+[m			[32m+ "city_code text, "[m
+[32m+[m			[32m+ "province_id integer )";[m
+[32m+[m	[32mpublic static final String COUNTY = "create table County ("[m
+[32m+[m			[32m+ "id integer primary key autoincrement, "[m
+[32m+[m			[32m+ "county_name text, "[m
+[32m+[m			[32m+ "county_code text, "[m
+[32m+[m			[32m+ "city_code integer )";[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic XWeatherOpenHelper(Context context, String name, CursorFactory factory, int version) {[m
+[32m+[m		[32msuper(context, name, factory, version);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m@Override[m
+[32m+[m	[32mpublic void onCreate(SQLiteDatabase db) {[m
+[32m+[m		[32mdb.execSQL(PROVINCE);[m
+[32m+[m		[32mdb.execSQL(CITY);[m
+[32m+[m		[32mdb.execSQL(COUNTY);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m@Override[m
+[32m+[m	[32mpublic void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/so/reknew/xweather/model/City.java b/src/so/reknew/xweather/model/City.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c0cd6f5[m
+[1m--- /dev/null[m
+[1m+++ b/src/so/reknew/xweather/model/City.java[m
+[36m@@ -0,0 +1,41 @@[m
+[32m+[m[32mpackage so.reknew.xweather.model;[m
+[32m+[m
+[32m+[m[32mpublic class City {[m
+[32m+[m
+[32m+[m	[32mprivate int id;[m
+[32m+[m	[32mprivate String name;[m
+[32m+[m	[32mprivate String code;[m
+[32m+[m	[32mprivate int provinceId;[m
+[32m+[m[41m		[m
+[32m+[m	[32mpublic int getId() {[m
+[32m+[m		[32mreturn id;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setId(int id) {[m
+[32m+[m		[32mthis.id = id;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String getName() {[m
+[32m+[m		[32mreturn name;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setName(String name) {[m
+[32m+[m		[32mthis.name = name;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String getCode() {[m
+[32m+[m		[32mreturn code;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void getCode(String code) {[m
+[32m+[m		[32mthis.code = code;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic int getProvinceId() {[m
+[32m+[m		[32mreturn provinceId;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setProvinceId(int provinceId) {[m
+[32m+[m		[32mthis.provinceId = provinceId;[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/so/reknew/xweather/model/County.java b/src/so/reknew/xweather/model/County.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..17f7494[m
+[1m--- /dev/null[m
+[1m+++ b/src/so/reknew/xweather/model/County.java[m
+[36m@@ -0,0 +1,41 @@[m
+[32m+[m[32mpackage so.reknew.xweather.model;[m
+[32m+[m
+[32m+[m[32mpublic class County {[m
+[32m+[m
+[32m+[m	[32mprivate int id;[m
+[32m+[m	[32mprivate String name;[m
+[32m+[m	[32mprivate String code;[m
+[32m+[m	[32mprivate int cityId;[m
+[32m+[m[41m		[m
+[32m+[m	[32mpublic int getId() {[m
+[32m+[m		[32mreturn id;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setId(int id) {[m
+[32m+[m		[32mthis.id = id;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String getName() {[m
+[32m+[m		[32mreturn name;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setName(String name) {[m
+[32m+[m		[32mthis.name = name;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String getCode() {[m
+[32m+[m		[32mreturn code;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void getCode(String code) {[m
+[32m+[m		[32mthis.code = code;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic int getCityId() {[m
+[32m+[m		[32mreturn cityId;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setCityId(int cityId) {[m
+[32m+[m		[32mthis.cityId = cityId;[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/so/reknew/xweather/model/Province.java b/src/so/reknew/xweather/model/Province.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a12c98f[m
+[1m--- /dev/null[m
+[1m+++ b/src/so/reknew/xweather/model/Province.java[m
+[36m@@ -0,0 +1,32 @@[m
+[32m+[m[32mpackage so.reknew.xweather.model;[m
+[32m+[m
+[32m+[m[32mpublic class Province {[m
+[32m+[m
+[32m+[m	[32mprivate int id;[m
+[32m+[m	[32mprivate String name;[m
+[32m+[m	[32mprivate String code;[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic int getId() {[m
+[32m+[m		[32mreturn id;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setId(int id) {[m
+[32m+[m		[32mthis.id = id;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String getName() {[m
+[32m+[m		[32mreturn name;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setName(String name) {[m
+[32m+[m		[32mthis.name = name;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String getCode() {[m
+[32m+[m		[32mreturn code;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void getCode(String code) {[m
+[32m+[m		[32mthis.code = code;[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/so/reknew/xweather/util/XWeatherDB.java b/src/so/reknew/xweather/util/XWeatherDB.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..2161e1b[m
+[1m--- /dev/null[m
+[1m+++ b/src/so/reknew/xweather/util/XWeatherDB.java[m
+[36m@@ -0,0 +1,30 @@[m
+[32m+[m[32mpackage so.reknew.xweather.util;[m
+[32m+[m
+[32m+[m[32mimport android.content.Context;[m
+[32m+[m[32mimport android.database.sqlite.SQLiteDatabase;[m
+[32m+[m[32mimport so.reknew.xweather.db.XWeatherOpenHelper;[m
+[32m+[m[32mimport so.reknew.xweather.model.Province;[m
+[32m+[m
+[32m+[m[32mpublic class XWeatherDB {[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic static final String DB_NAME = "xweather";[m
+[32m+[m	[32mpublic static final int VERSION = 1;[m
+[32m+[m	[32mprivate static XWeatherDB xWeatherDB;[m
+[32m+[m	[32mprivate SQLiteDatabase db;[m
+[32m+[m[41m	[m
+[32m+[m	[32mprivate XWeatherDB(Context context) {[m
+[32m+[m		[32mXWeatherOpenHelper dbHelper = new XWeatherOpenHelper(context, DB_NAME, null, VERSION);[m
+[32m+[m		[32mdb = dbHelper.getWritableDatabase();[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic synchronized static XWeatherDB getInstance(Context context) {[m
+[32m+[m		[32mif(xWeatherDB == null) {[m
+[32m+[m			[32mxWeatherDB = new XWeatherDB(context);[m
+[32m+[m		[32m}[m
+[32m+[m		[32mreturn xWeatherDB;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void saveProvince(Province province) {[m
+[32m+[m[41m		[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+
+[33mcommit d7e47c124d7c478758fa576e570835a47190d24c[m
+Author: Liao <reknew@hotmail.com>
+Date:   Thu Mar 3 17:47:36 2016 +0800
+
+    just a tets, no meaning.
+
+[1mdiff --git a/res/layout/activity_main.xml b/res/layout/activity_main.xml[m
+[1mdeleted file mode 100644[m
+[1mindex 2e67d00..0000000[m
+[1m--- a/res/layout/activity_main.xml[m
+[1m+++ /dev/null[m
+[36m@@ -1,16 +0,0 @@[m
+[31m-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[31m-    xmlns:tools="http://schemas.android.com/tools"[m
+[31m-    android:layout_width="match_parent"[m
+[31m-    android:layout_height="match_parent"[m
+[31m-    android:paddingBottom="@dimen/activity_vertical_margin"[m
+[31m-    android:paddingLeft="@dimen/activity_horizontal_margin"[m
+[31m-    android:paddingRight="@dimen/activity_horizontal_margin"[m
+[31m-    android:paddingTop="@dimen/activity_vertical_margin"[m
+[31m-    tools:context="so.reknew.xweather.MainActivity" >[m
+[31m-[m
+[31m-    <TextView[m
+[31m-        android:layout_width="wrap_content"[m
+[31m-        android:layout_height="wrap_content"[m
+[31m-        android:text="@string/hello_world" />[m
+[31m-[m
+[31m-</RelativeLayout>[m
+[1mdiff --git a/res/menu/main.xml b/res/menu/main.xml[m
+[1mdeleted file mode 100644[m
+[1mindex c432c47..0000000[m
+[1m--- a/res/menu/main.xml[m
+[1m+++ /dev/null[m
+[36m@@ -1,11 +0,0 @@[m
+[31m-<menu xmlns:android="http://schemas.android.com/apk/res/android"[m
+[31m-    xmlns:tools="http://schemas.android.com/tools"[m
+[31m-    tools:context="so.reknew.xweather.MainActivity" >[m
+[31m-[m
+[31m-    <item[m
+[31m-        android:id="@+id/action_settings"[m
+[31m-        android:orderInCategory="100"[m
+[31m-        android:showAsAction="never"[m
+[31m-        android:title="@string/action_settings"/>[m
+[31m-[m
+[31m-</menu>[m
+[1mdiff --git a/src/so/reknew/xweather/MainActivity.java b/src/so/reknew/xweather/MainActivity.java[m
+[1mdeleted file mode 100644[m
+[1mindex 44b3d01..0000000[m
+[1m--- a/src/so/reknew/xweather/MainActivity.java[m
+[1m+++ /dev/null[m
+[36m@@ -1,34 +0,0 @@[m
+[31m-package so.reknew.xweather;[m
+[31m-[m
+[31m-import android.app.Activity;[m
+[31m-import android.os.Bundle;[m
+[31m-import android.view.Menu;[m
+[31m-import android.view.MenuItem;[m
+[31m-[m
+[31m-public class MainActivity extends Activity {[m
+[31m-[m
+[31m-	@Override[m
+[31m-	protected void onCreate(Bundle savedInstanceState) {[m
+[31m-		super.onCreate(savedInstanceState);[m
+[31m-		setContentView(R.layout.activity_main);[m
+[31m-	}[m
+[31m-[m
+[31m-	@Override[m
+[31m-	public boolean onCreateOptionsMenu(Menu menu) {[m
+[31m-		// Inflate the menu; this adds items to the action bar if it is present.[m
+[31m-		getMenuInflater().inflate(R.menu.main, menu);[m
+[31m-		return true;[m
+[31m-	}[m
+[31m-[m
+[31m-	@Override[m
+[31m-	public boolean onOptionsItemSelected(MenuItem item) {[m
+[31m-		// Handle action bar item clicks here. The action bar will[m
+[31m-		// automatically handle clicks on the Home/Up button, so long[m
+[31m-		// as you specify a parent activity in AndroidManifest.xml.[m
+[31m-		int id = item.getItemId();[m
+[31m-		if (id == R.id.action_settings) {[m
+[31m-			return true;[m
+[31m-		}[m
+[31m-		return super.onOptionsItemSelected(item);[m
+[31m-	}[m
+[31m-}[m
+
+[33mcommit 169d024b58d77cec3be53030b35ffc2e71eee020[m
+Author: Liao <reknew@hotmail.com>
+Date:   Wed Mar 2 22:29:56 2016 +0800
+
+    FirstCommit.
+
+[1mdiff --git a/.classpath b/.classpath[m
+[1mnew file mode 100644[m
+[1mindex 0000000..7bc01d9[m
+[1m--- /dev/null[m
+[1m+++ b/.classpath[m
+[36m@@ -0,0 +1,9 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="UTF-8"?>[m
+[32m+[m[32m<classpath>[m
+[32m+[m	[32m<classpathentry kind="src" path="src"/>[m
+[32m+[m	[32m<classpathentry kind="src" path="gen"/>[m
+[32m+[m	[32m<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>[m
+[32m+[m	[32m<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>[m
+[32m+[m	[32m<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>[m
+[32m+[m	[32m<classpathentry kind="output" path="bin/classes"/>[m
+[32m+[m[32m</classpath>[m
+[1mdiff --git a/.project b/.project[m
+[1mnew file mode 100644[m
+[1mindex 0000000..95152fa[m
+[1m--- /dev/null[m
+[1m+++ b/.project[m
+[36m@@ -0,0 +1,33 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="UTF-8"?>[m
+[32m+[m[32m<projectDescription>[m
+[32m+[m	[32m<name>xWeather</name>[m
+[32m+[m	[32m<comment></comment>[m
+[32m+[m	[32m<projects>[m
+[32m+[m	[32m</projects>[m
+[32m+[m	[32m<buildSpec>[m
+[32m+[m		[32m<buildCommand>[m
+[32m+[m			[32m<name>com.android.ide.eclipse.adt.ResourceManagerBuilder</name>[m
+[32m+[m			[32m<arguments>[m
+[32m+[m			[32m</arguments>[m
+[32m+[m		[32m</buildCommand>[m
+[32m+[m		[32m<buildCommand>[m
+[32m+[m			[32m<name>com.android.ide.eclipse.adt.PreCompilerBuilder</name>[m
+[32m+[m			[32m<arguments>[m
+[32m+[m			[32m</arguments>[m
+[32m+[m		[32m</buildCommand>[m
+[32m+[m		[32m<buildCommand>[m
+[32m+[m			[32m<name>org.eclipse.jdt.core.javabuilder</name>[m
+[32m+[m			[32m<arguments>[m
+[32m+[m			[32m</arguments>[m
+[32m+[m		[32m</buildCommand>[m
+[32m+[m		[32m<buildCommand>[m
+[32m+[m			[32m<name>com.android.ide.eclipse.adt.ApkBuilder</name>[m
+[32m+[m			[32m<arguments>[m
+[32m+[m			[32m</arguments>[m
+[32m+[m		[32m</buildCommand>[m
+[32m+[m	[32m</buildSpec>[m
+[32m+[m	[32m<natures>[m
+[32m+[m		[32m<nature>com.android.ide.eclipse.adt.AndroidNature</nature>[m
+[32m+[m		[32m<nature>org.eclipse.jdt.core.javanature</nature>[m
+[32m+[m	[32m</natures>[m
+[32m+[m[32m</projectDescription>[m
+[1mdiff --git a/.settings/org.eclipse.jdt.core.prefs b/.settings/org.eclipse.jdt.core.prefs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..b080d2d[m
+[1m--- /dev/null[m
+[1m+++ b/.settings/org.eclipse.jdt.core.prefs[m
+[36m@@ -0,0 +1,4 @@[m
+[32m+[m[32meclipse.preferences.version=1[m
+[32m+[m[32morg.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6[m
+[32m+[m[32morg.eclipse.jdt.core.compiler.compliance=1.6[m
+[32m+[m[32morg.eclipse.jdt.core.compiler.source=1.6[m
+[1mdiff --git a/AndroidManifest.xml b/AndroidManifest.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f8a7799[m
+[1m--- /dev/null[m
+[1m+++ b/AndroidManifest.xml[m
+[36m@@ -0,0 +1,27 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="utf-8"?>[m
+[32m+[m[32m<manifest xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    package="so.reknew.xweather"[m
+[32m+[m[32m    android:versionCode="1"[m
+[32m+[m[32m    android:versionName="1.0" >[m
+[32m+[m
+[32m+[m[32m    <uses-sdk[m
+[32m+[m[32m        android:minSdkVersion="19"[m
+[32m+[m[32m        android:targetSdkVersion="22" />[m
+[32m+[m
+[32m+[m[32m    <application[m
+[32m+[m[32m        android:allowBackup="true"[m
+[32m+[m[32m        android:icon="@drawable/ic_launcher"[m
+[32m+[m[32m        android:label="@string/app_name"[m
+[32m+[m[32m        android:theme="@style/AppTheme" >[m
+[32m+[m[32m        <activity[m
+[32m+[m[32m            android:name=".MainActivity"[m
+[32m+[m[32m            android:label="@string/app_name" >[m
+[32m+[m[32m            <intent-filter>[m
+[32m+[m[32m                <action android:name="android.intent.action.MAIN" />[m
+[32m+[m
+[32m+[m[32m                <category android:name="android.intent.category.LAUNCHER" />[m
+[32m+[m[32m            </intent-filter>[m
+[32m+[m[32m        </activity>[m
+[32m+[m[32m    </application>[m
+[32m+[m
+[32m+[m[32m</manifest>[m
+[1mdiff --git a/ic_launcher-web.png b/ic_launcher-web.png[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c94874a[m
+Binary files /dev/null and b/ic_launcher-web.png differ
+[1mdiff --git a/libs/android-support-v4.jar b/libs/android-support-v4.jar[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f8fe333[m
+Binary files /dev/null and b/libs/android-support-v4.jar differ
+[1mdiff --git a/proguard-project.txt b/proguard-project.txt[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f2fe155[m
+[1m--- /dev/null[m
+[1m+++ b/proguard-project.txt[m
+[36m@@ -0,0 +1,20 @@[m
+[32m+[m[32m# To enable ProGuard in your project, edit project.properties[m
+[32m+[m[32m# to define the proguard.config property as described in that file.[m
+[32m+[m[32m#[m
+[32m+[m[32m# Add project specific ProGuard rules here.[m
+[32m+[m[32m# By default, the flags in this file are appended to flags specified[m
+[32m+[m[32m# in ${sdk.dir}/tools/proguard/proguard-android.txt[m
+[32m+[m[32m# You can edit the include path and order by changing the ProGuard[m
+[32m+[m[32m# include property in project.properties.[m
+[32m+[m[32m#[m
+[32m+[m[32m# For more details, see[m
+[32m+[m[32m#   http://developer.android.com/guide/developing/tools/proguard.html[m
+[32m+[m
+[32m+[m[32m# Add any project specific keep options here:[m
+[32m+[m
+[32m+[m[32m# If your project uses WebView with JS, uncomment the following[m
+[32m+[m[32m# and specify the fully qualified class name to the JavaScript interface[m
+[32m+[m[32m# class:[m
+[32m+[m[32m#-keepclassmembers class fqcn.of.javascript.interface.for.webview {[m
+[32m+[m[32m#   public *;[m
+[32m+[m[32m#}[m
+[1mdiff --git a/project.properties b/project.properties[m
+[1mnew file mode 100644[m
+[1mindex 0000000..00cf62b[m
+[1m--- /dev/null[m
+[1m+++ b/project.properties[m
+[36m@@ -0,0 +1,14 @@[m
+[32m+[m[32m# This file is automatically generated by Android Tools.[m
+[32m+[m[32m# Do not modify this file -- YOUR CHANGES WILL BE ERASED![m
+[32m+[m[32m#[m
+[32m+[m[32m# This file must be checked in Version Control Systems.[m
+[32m+[m[32m#[m
+[32m+[m[32m# To customize properties used by the Ant build system edit[m
+[32m+[m[32m# "ant.properties", and override values to adapt the script to your[m
+[32m+[m[32m# project structure.[m
+[32m+[m[32m#[m
+[32m+[m[32m# To enable ProGuard to shrink and obfuscate your code, uncomment this (available properties: sdk.dir, user.home):[m
+[32m+[m[32m#proguard.config=${sdk.dir}/tools/proguard/proguard-android.txt:proguard-project.txt[m
+[32m+[m
+[32m+[m[32m# Project target.[m
+[32m+[m[32mtarget=android-22[m
+[1mdiff --git a/res/drawable-hdpi/ic_launcher.png b/res/drawable-hdpi/ic_launcher.png[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c89e90f[m
+Binary files /dev/null and b/res/drawable-hdpi/ic_launcher.png differ
+[1mdiff --git a/res/drawable-mdpi/ic_launcher.png b/res/drawable-mdpi/ic_launcher.png[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0e5be37[m
+Binary files /dev/null and b/res/drawable-mdpi/ic_launcher.png differ
+[1mdiff --git a/res/drawable-xhdpi/ic_launcher.png b/res/drawable-xhdpi/ic_launcher.png[m
+[1mnew file mode 100644[m
+[1mindex 0000000..59aebeb[m
+Binary files /dev/null and b/res/drawable-xhdpi/ic_launcher.png differ
+[1mdiff --git a/res/drawable-xxhdpi/ic_launcher.png b/res/drawable-xxhdpi/ic_launcher.png[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8b8b5a5[m
+Binary files /dev/null and b/res/drawable-xxhdpi/ic_launcher.png differ
+[1mdiff --git a/res/layout/activity_main.xml b/res/layout/activity_main.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..2e67d00[m
+[1m--- /dev/null[m
+[1m+++ b/res/layout/activity_main.xml[m
+[36m@@ -0,0 +1,16 @@[m
+[32m+[m[32m<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:tools="http://schemas.android.com/tools"[m
+[32m+[m[32m    android:layout_width="match_parent"[m
+[32m+[m[32m    android:layout_height="match_parent"[m
+[32m+[m[32m    android:paddingBottom="@dimen/activity_vertical_margin"[m
+[32m+[m[32m    android:paddingLeft="@dimen/activity_horizontal_margin"[m
+[32m+[m[32m    android:paddingRight="@dimen/activity_horizontal_margin"[m
+[32m+[m[32m    android:paddingTop="@dimen/activity_vertical_margin"[m
+[32m+[m[32m    tools:context="so.reknew.xweather.MainActivity" >[m
+[32m+[m
+[32m+[m[32m    <TextView[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:text="@string/hello_world" />[m
+[32m+[m
+[32m+[m[32m</RelativeLayout>[m
+[1mdiff --git a/res/menu/main.xml b/res/menu/main.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c432c47[m
+[1m--- /dev/null[m
+[1m+++ b/res/menu/main.xml[m
+[36m@@ -0,0 +1,11 @@[m
+[32m+[m[32m<menu xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:tools="http://schemas.android.com/tools"[m
+[32m+[m[32m    tools:context="so.reknew.xweather.MainActivity" >[m
+[32m+[m
+[32m+[m[32m    <item[m
+[32m+[m[32m        android:id="@+id/action_settings"[m
+[32m+[m[32m        android:orderInCategory="100"[m
+[32m+[m[32m        android:showAsAction="never"[m
+[32m+[m[32m        android:title="@string/action_settings"/>[m
+[32m+[m
+[32m+[m[32m</menu>[m
+[1mdiff --git a/res/values-v11/styles.xml b/res/values-v11/styles.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3c02242[m
+[1m--- /dev/null[m
+[1m+++ b/res/values-v11/styles.xml[m
+[36m@@ -0,0 +1,11 @@[m
+[32m+[m[32m<resources>[m
+[32m+[m
+[32m+[m[32m    <!--[m
+[32m+[m[32m        Base application theme for API 11+. This theme completely replaces[m
+[32m+[m[32m        AppBaseTheme from res/values/styles.xml on API 11+ devices.[m
+[32m+[m[32m    -->[m
+[32m+[m[32m    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">[m
+[32m+[m[32m        <!-- API 11 theme customizations can go here. -->[m
+[32m+[m[32m    </style>[m
+[32m+[m
+[32m+[m[32m</resources>[m
+[1mdiff --git a/res/values-v14/styles.xml b/res/values-v14/styles.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a91fd03[m
+[1m--- /dev/null[m
+[1m+++ b/res/values-v14/styles.xml[m
+[36m@@ -0,0 +1,12 @@[m
+[32m+[m[32m<resources>[m
+[32m+[m
+[32m+[m[32m    <!--[m
+[32m+[m[32m        Base application theme for API 14+. This theme completely replaces[m
+[32m+[m[32m        AppBaseTheme from BOTH res/values/styles.xml and[m
+[32m+[m[32m        res/values-v11/styles.xml on API 14+ devices.[m
+[32m+[m[32m    -->[m
+[32m+[m[32m    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">[m
+[32m+[m[32m        <!-- API 14 theme customizations can go here. -->[m
+[32m+[m[32m    </style>[m
+[32m+[m
+[32m+[m[32m</resources>[m
+[1mdiff --git a/res/values-w820dp/dimens.xml b/res/values-w820dp/dimens.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f3e7020[m
+[1m--- /dev/null[m
+[1m+++ b/res/values-w820dp/dimens.xml[m
+[36m@@ -0,0 +1,10 @@[m
+[32m+[m[32m<resources>[m
+[32m+[m
+[32m+[m[32m    <!--[m
+[32m+[m[32m         Example customization of dimensions originally defined in res/values/dimens.xml[m
+[32m+[m[32m         (such as screen margins) for screens with more than 820dp of available width. This[m
+[32m+[m[32m         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).[m
+[32m+[m[32m    -->[m
+[32m+[m[32m    <dimen name="activity_horizontal_margin">64dp</dimen>[m
+[32m+[m
+[32m+[m[32m</resources>[m
+[1mdiff --git a/res/values/dimens.xml b/res/values/dimens.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..55c1e59[m
+[1m--- /dev/null[m
+[1m+++ b/res/values/dimens.xml[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32m<resources>[m
+[32m+[m
+[32m+[m[32m    <!-- Default screen margins, per the Android Design guidelines. -->[m
+[32m+[m[32m    <dimen name="activity_horizontal_margin">16dp</dimen>[m
+[32m+[m[32m    <dimen name="activity_vertical_margin">16dp</dimen>[m
+[32m+[m
+[32m+[m[32m</resources>[m
+[1mdiff --git a/res/values/strings.xml b/res/values/strings.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..07b8db1[m
+[1m--- /dev/null[m
+[1m+++ b/res/values/strings.xml[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="utf-8"?>[m
+[32m+[m[32m<resources>[m
+[32m+[m
+[32m+[m[32m    <string name="app_name">xWeather</string>[m
+[32m+[m[32m    <string name="hello_world">Hello world!</string>[m
+[32m+[m[32m    <string name="action_settings">Settings</string>[m
+[32m+[m
+[32m+[m[32m</resources>[m
+[1mdiff --git a/res/values/styles.xml b/res/values/styles.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..6ce89c7[m
+[1m--- /dev/null[m
+[1m+++ b/res/values/styles.xml[m
+[36m@@ -0,0 +1,20 @@[m
+[32m+[m[32m<resources>[m
+[32m+[m
+[32m+[m[32m    <!--[m
+[32m+[m[32m        Base application theme, dependent on API level. This theme is replaced[m
+[32m+[m[32m        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.[m
+[32m+[m[32m    -->[m
+[32m+[m[32m    <style name="AppBaseTheme" parent="android:Theme.Light">[m
+[32m+[m[32m        <!--[m
+[32m+[m[32m            Theme customizations available in newer API levels can go in[m
+[32m+[m[32m            res/values-vXX/styles.xml, while customizations related to[m
+[32m+[m[32m            backward-compatibility can go here.[m
+[32m+[m[32m        -->[m
+[32m+[m[32m    </style>[m
+[32m+[m
+[32m+[m[32m    <!-- Application theme. -->[m
+[32m+[m[32m    <style name="AppTheme" parent="AppBaseTheme">[m
+[32m+[m[32m        <!-- All customizations that are NOT specific to a particular API-level can go here. -->[m
+[32m+[m[32m    </style>[m
+[32m+[m
+[32m+[m[32m</resources>[m
+[1mdiff --git a/src/so/reknew/xweather/MainActivity.java b/src/so/reknew/xweather/MainActivity.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..44b3d01[m
+[1m--- /dev/null[m
+[1m+++ b/src/so/reknew/xweather/MainActivity.java[m
+[36m@@ -0,0 +1,34 @@[m
+[32m+[m[32mpackage so.reknew.xweather;[m
+[32m+[m
+[32m+[m[32mimport android.app.Activity;[m
+[32m+[m[32mimport android.os.Bundle;[m
+[32m+[m[32mimport android.view.Menu;[m
+[32m+[m[32mimport android.view.MenuItem;[m
+[32m+[m
+[32m+[m[32mpublic class MainActivity extends Activity {[m
+[32m+[m
+[32m+[m	[32m@Override[m
+[32m+[m	[32mprotected void onCreate(Bundle savedInstanceState) {[m
+[32m+[m		[32msuper.onCreate(savedInstanceState);[m
+[32m+[m		[32msetContentView(R.layout.activity_main);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m@Override[m
+[32m+[m	[32mpublic boolean onCreateOptionsMenu(Menu menu) {[m
+[32m+[m		[32m// Inflate the menu; this adds items to the action bar if it is present.[m
+[32m+[m		[32mgetMenuInflater().inflate(R.menu.main, menu);[m
+[32m+[m		[32mreturn true;[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m@Override[m
+[32m+[m	[32mpublic boolean onOptionsItemSelected(MenuItem item) {[m
+[32m+[m		[32m// Handle action bar item clicks here. The action bar will[m
+[32m+[m		[32m// automatically handle clicks on the Home/Up button, so long[m
+[32m+[m		[32m// as you specify a parent activity in AndroidManifest.xml.[m
+[32m+[m		[32mint id = item.getItemId();[m
+[32m+[m		[32mif (id == R.id.action_settings) {[m
+[32m+[m			[32mreturn true;[m
+[32m+[m		[32m}[m
+[32m+[m		[32mreturn super.onOptionsItemSelected(item);[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+
+[33mcommit 861e119db035e5648b6268d53079eb5c68303451[m
+Author: HideIt <chunmaoliao@gmail.com>
+Date:   Wed Mar 2 22:19:50 2016 +0800
+
+    Initial commit
+
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c9c2248[m
+[1m--- /dev/null[m
+[1m+++ b/.gitignore[m
+[36m@@ -0,0 +1,32 @@[m
+[32m+[m[32m# Built application files[m
+[32m+[m[32m*.apk[m
+[32m+[m[32m*.ap_[m
+[32m+[m
+[32m+[m[32m# Files for the Dalvik VM[m
+[32m+[m[32m*.dex[m
+[32m+[m
+[32m+[m[32m# Java class files[m
+[32m+[m[32m*.class[m
+[32m+[m
+[32m+[m[32m# Generated files[m
+[32m+[m[32mbin/[m
+[32m+[m[32mgen/[m
+[32m+[m
+[32m+[m[32m# Gradle files[m
+[32m+[m[32m.gradle/[m
+[32m+[m[32mbuild/[m
+[32m+[m
+[32m+[m[32m# Local configuration file (sdk path, etc)[m
+[32m+[m[32mlocal.properties[m
+[32m+[m
+[32m+[m[32m# Proguard folder generated by Eclipse[m
+[32m+[m[32mproguard/[m
+[32m+[m
+[32m+[m[32m# Log Files[m
+[32m+[m[32m*.log[m
+[32m+[m
+[32m+[m[32m# Android Studio Navigation editor temp files[m
+[32m+[m[32m.navigation/[m
+[32m+[m
+[32m+[m[32m# Android Studio captures folder[m
+[32m+[m[32mcaptures/[m
+[1mdiff --git a/LICENSE b/LICENSE[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8dada3e[m
+[1m--- /dev/null[m
+[1m+++ b/LICENSE[m
+[36m@@ -0,0 +1,201 @@[m
+[32m+[m[32m                                 Apache License[m
+[32m+[m[32m                           Version 2.0, January 2004[m
+[32m+[m[32m                        http://www.apache.org/licenses/[m
+[32m+[m
+[32m+[m[32m   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION[m
+[32m+[m
+[32m+[m[32m   1. Definitions.[m
+[32m+[m
+[32m+[m[32m      "License" shall mean the terms and conditions for use, reproduction,[m
+[32m+[m[32m      and distribution as defined by Sections 1 through 9 of this document.[m
+[32m+[m
+[32m+[m[32m      "Licensor" shall mean the copyright owner or entity authorized by[m
+[32m+[m[32m      the copyright owner that is granting the License.[m
+[32m+[m
+[32m+[m[32m      "Legal Entity" shall mean the union of the acting entity and all[m
+[32m+[m[32m      other entities that control, are controlled by, or are under common[m
+[32m+[m[32m      control with that entity. For the purposes of this definition,[m
+[32m+[m[32m      "control" means (i) the power, direct or indirect, to cause the[m
+[32m+[m[32m      direction or management of such entity, whether by contract or[m
+[32m+[m[32m      otherwise, or (ii) ownership of fifty percent (50%) or more of the[m
+[32m+[m[32m      outstanding shares, or (iii) beneficial ownership of such entity.[m
+[32m+[m
+[32m+[m[32m      "You" (or "Your") shall mean an individual or Legal Entity[m
+[32m+[m[32m      exercising permissions granted by this License.[m
+[32m+[m
+[32m+[m[32m      "Source" form shall mean the preferred form for making modifications,[m
+[32m+[m[32m      including but not limited to software source code, documentation[m
+[32m+[m[32m      source, and configuration files.[m
+[32m+[m
+[32m+[m[32m      "Object" form shall mean any form resulting from mechanical[m
+[32m+[m[32m      transformation or translation of a Source form, including but[m
+[32m+[m[32m      not limited to compiled object code, generated documentation,[m
+[32m+[m[32m      and conversions to other media types.[m
+[32m+[m
+[32m+[m[32m      "Work" shall mean the work of authorship, whether in Source or[m
+[32m+[m[32m      Object form, made available under the License, as indicated by a[m
+[32m+[m[32m      copyright notice that is included in or attached to the work[m
+[32m+[m[32m      (an example is provided in the Appendix below).[m
+[32m+[m
+[32m+[m[32m      "Derivative Works" shall mean any work, whether in Source or Object[m
+[32m+[m[32m      form, that is based on (or derived from) the Work and for which the[m
+[32m+[m[32m      editorial revisions, annotations, elaborations, or other modifications[m
+[32m+[m[32m      represent, as a whole, an original work of authorship. For the purposes[m
+[32m+[m[32m      of this License, Derivative Works shall not include works that remain[m
+[32m+[m[32m      separable from, or merely link (or bind by name) to the interfaces of,[m
+[32m+[m[32m      the Work and Derivative Works thereof.[m
+[32m+[m
+[32m+[m[32m      "Contribution" shall mean any work of authorship, including[m
+[32m+[m[32m      the original version of the Work and any modifications or additions[m
+[32m+[m[32m      to that Work or Derivative Works thereof, that is intentionally[m
+[32m+[m[32m      submitted to Licensor for inclusion in the Work by the copyright owner[m
+[32m+[m[32m      or by an individual or Legal Entity authorized to submit on behalf of[m
+[32m+[m[32m      the copyright owner. For the purposes of this definition, "submitted"[m
+[32m+[m[32m      means any form of electronic, verbal, or written communication sent[m
+[32m+[m[32m      to the Licensor or its representatives, including but not limited to[m
+[32m+[m[32m      communication on electronic mailing lists, source code control systems,[m
+[32m+[m[32m      and issue tracking systems that are managed by, or on behalf of, the[m
+[32m+[m[32m      Licensor for the purpose of discussing and improving the Work, but[m
+[32m+[m[32m      excluding communication that is conspicuously marked or otherwise[m
+[32m+[m[32m      designated in writing by the copyright owner as "Not a Contribution."[m
+[32m+[m
+[32m+[m[32m      "Contributor" shall mean Licensor and any individual or Legal Entity[m
+[32m+[m[32m      on behalf of whom a Contribution has been received by Licensor and[m
+[32m+[m[32m      subsequently incorporated within the Work.[m
+[32m+[m
+[32m+[m[32m   2. Grant of Copyright License. Subject to the terms and conditions of[m
+[32m+[m[32m      this License, each Contributor hereby grants to You a perpetual,[m
+[32m+[m[32m      worldwide, non-exclusive, no-charge, royalty-free, irrevocable[m
+[32m+[m[32m      copyright license to reproduce, prepare Derivative Works of,[m
+[32m+[m[32m      publicly display, publicly perform, sublicense, and distribute the[m
+[32m+[m[32m      Work and such Derivative Works in Source or Object form.[m
+[32m+[m
+[32m+[m[32m   3. Grant of Patent License. Subject to the terms and conditions of[m
+[32m+[m[32m      this License, each Contributor hereby grants to You a perpetual,[m
+[32m+[m[32m      worldwide, non-exclusive, no-charge, royalty-free, irrevocable[m
+[32m+[m[32m      (except as stated in this section) patent license to make, have made,[m
+[32m+[m[32m      use, offer to sell, sell, import, and otherwise transfer the Work,[m
+[32m+[m[32m      where such license applies only to those patent claims licensable[m
+[32m+[m[32m      by such Contributor that are necessarily infringed by their[m
+[32m+[m[32m      Contribution(s) alone or by combination of their Contribution(s)[m
+[32m+[m[32m      with the Work to which such Contribution(s) was submitted. If You[m
+[32m+[m[32m      institute patent litigation against any entity (including a[m
+[32m+[m[32m      cross-claim or counterclaim in a lawsuit) alleging that the Work[m
+[32m+[m[32m      or a Contribution incorporated within the Work constitutes direct[m
+[32m+[m[32m      or contributory patent infringement, then any patent licenses[m
+[32m+[m[32m      granted to You under this License for that Work shall terminate[m
+[32m+[m[32m      as of the date such litigation is filed.[m
+[32m+[m
+[32m+[m[32m   4. Redistribution. You may reproduce and distribute copies of the[m
+[32m+[m[32m      Work or Derivative Works thereof in any medium, with or without[m
+[32m+[m[32m      modifications, and in Source or Object form, provided that You[m
+[32m+[m[32m      meet the following conditions:[m
+[32m+[m
+[32m+[m[32m      (a) You must give any other recipients of the Work or[m
+[32m+[m[32m          Derivative Works a copy of this License; and[m
+[32m+[m
+[32m+[m[32m      (b) You must cause any modified files to carry prominent notices[m
+[32m+[m[32m          stating that You changed the files; and[m
+[32m+[m
+[32m+[m[32m      (c) You must retain, in the Source form of any Derivative Works[m
+[32m+[m[32m          that You distribute, all copyright, patent, trademark, and[m
+[32m+[m[32m          attribution notices from the Source form of the Work,[m
+[32m+[m[32m          excluding those notices that do not pertain to any part of[m
+[32m+[m[32m          the Derivative Works; and[m
+[32m+[m
+[32m+[m[32m      (d) If the Work includes a "NOTICE" text file as part of its[m
+[32m+[m[32m          distribution, then any Derivative Works that You distribute must[m
+[32m+[m[32m          include a readable copy of the attribution notices contained[m
+[32m+[m[32m          within such NOTICE file, excluding those notices that do not[m
+[32m+[m[32m          pertain to any part of the Derivative Works, in at least one[m
+[32m+[m[32m          of the following places: within a NOTICE text file distributed[m
+[32m+[m[32m          as part of the Derivative Works; within the Source form or[m
+[32m+[m[32m          documentation, if provided along with the Derivative Works; or,[m
+[32m+[m[32m          within a display generated by the Derivative Works, if and[m
+[32m+[m[32m          wherever such third-party notices normally appear. The contents[m
+[32m+[m[32m          of the NOTICE file are for informational purposes only and[m
+[32m+[m[32m          do not modify the License. You may add Your own attribution[m
+[32m+[m[32m          notices within Derivative Works that You distribute, alongside[m
+[32m+[m[32m          or as an addendum to the NOTICE text from the Work, provided[m
+[32m+[m[32m          that such additional attribution notices cannot be construed[m
+[32m+[m[32m          as modifying the License.[m
+[32m+[m
+[32m+[m[32m      You may add Your own copyright statement to Your modifications and[m
+[32m+[m[32m      may provide additional or different license terms and conditions[m
+[32m+[m[32m      for use, reproduction, or distribution of Your modifications, or[m
+[32m+[m[32m      for any such Derivative Works as a whole, provided Your use,[m
+[32m+[m[32m      reproduction, and distribution of the Work otherwise complies with[m
+[32m+[m[32m      the conditions stated in this License.[m
+[32m+[m
+[32m+[m[32m   5. Submission of Contributions. Unless You explicitly state otherwise,[m
+[32m+[m[32m      any Contribution intentionally submitted for inclusion in the Work[m
+[32m+[m[32m      by You to the Licensor shall be under the terms and conditions of[m
+[32m+[m[32m      this License, without any additional terms or conditions.[m
+[32m+[m[32m      Notwithstanding the above, nothing herein shall supersede or modify[m
+[32m+[m[32m      the terms of any separate license agreement you may have executed[m
+[32m+[m[32m      with Licensor regarding such Contributions.[m
+[32m+[m
+[32m+[m[32m   6. Trademarks. This License does not grant permission to use the trade[m
+[32m+[m[32m      names, trademarks, service marks, or product names of the Licensor,[m
+[32m+[m[32m      except as required for reasonable and customary use in describing the[m
+[32m+[m[32m      origin of the Work and reproducing the content of the NOTICE file.[m
+[32m+[m
+[32m+[m[32m   7. Disclaimer of Warranty. Unless required by applicable law or[m
+[32m+[m[32m      agreed to in writing, Licensor provides the Work (and each[m
+[32m+[m[32m      Contributor provides its Contributions) on an "AS IS" BASIS,[m
+[32m+[m[32m      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or[m
+[32m+[m[32m      implied, including, without limitation, any warranties or conditions[m
+[32m+[m[32m      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A[m
+[32m+[m[32m      PARTICULAR PURPOSE. You are solely responsible for determining the[m
+[32m+[m[32m      appropriateness of using or redistributing the Work and assume any[m
+[32m+[m[32m      risks associated with Your exercise of permissions under this License.[m
+[32m+[m
+[32m+[m[32m   8. Limitation of Liability. In no event and under no legal theory,[m
+[32m+[m[32m      whether in tort (including negligence), contract, or otherwise,[m
+[32m+[m[32m      unless required by applicable law (such as deliberate and grossly[m
+[32m+[m[32m      negligent acts) or agreed to in writing, shall any Contributor be[m
+[32m+[m[32m      liable to You for damages, including any direct, indirect, special,[m
+[32m+[m[32m      incidental, or consequential damages of any character arising as a[m
+[32m+[m[32m      result of this License or out of the use or inability to use the[m
+[32m+[m[32m      Work (including but not limited to damages for loss of goodwill,[m
+[32m+[m[32m      work stoppage, computer failure or malfunction, or any and all[m
+[32m+[m[32m      other commercial damages or losses), even if such Contributor[m
+[32m+[m[32m      has been advised of the possibility of such damages.[m
+[32m+[m
+[32m+[m[32m   9. Accepting Warranty or Additional Liability. While redistributing[m
+[32m+[m[32m      the Work or Derivative Works thereof, You may choose to offer,[m
+[32m+[m[32m      and charge a fee for, acceptance of support, warranty, indemnity,[m
+[32m+[m[32m      or other liability obligations and/or rights consistent with this[m
+[32m+[m[32m      License. However, in accepting such obligations, You may act only[m
+[32m+[m[32m      on Your own behalf and on Your sole responsibility, not on behalf[m
+[32m+[m[32m      of any other Contributor, and only if You agree to indemnify,[m
+[32m+[m[32m      defend, and hold each Contributor harmless for any liability[m
+[32m+[m[32m      incurred by, or claims asserted against, such Contributor by reason[m
+[32m+[m[32m      of your accepting any such warranty or additional liability.[m
+[32m+[m
+[32m+[m[32m   END OF TERMS AND CONDITIONS[m
+[32m+[m
+[32m+[m[32m   APPENDIX: How to apply the Apache License to your work.[m
+[32m+[m
+[32m+[m[32m      To apply the Apache License to your work, attach the following[m
+[32m+[m[32m      boilerplate notice, with the fields enclosed by brackets "{}"[m
+[32m+[m[32m      replaced with your own identifying information. (Don't include[m
+[32m+[m[32m      the brackets!)  The text should be enclosed in the appropriate[m
+[32m+[m[32m      comment syntax for the file format. We also recommend that a[m
+[32m+[m[32m      file or class name and description of purpose be included on the[m
+[32m+[m[32m      same "printed page" as the copyright notice for easier[m
+[32m+[m[32m      identification within third-party archives.[m
+[32m+[m
+[32m+[m[32m   Copyright {yyyy} {name of copyright owner}[m
+[32m+[m
+[32m+[m[32m   Licensed under the Apache License, Version 2.0 (the "License");[m
+[32m+[m[32m   you may not use this file except in compliance with the License.[m
+[32m+[m[32m   You may obtain a copy of the License at[m
+[32m+[m
+[32m+[m[32m       http://www.apache.org/licenses/LICENSE-2.0[m
+[32m+[m
+[32m+[m[32m   Unless required by applicable law or agreed to in writing, software[m
+[32m+[m[32m   distributed under the License is distributed on an "AS IS" BASIS,[m
+[32m+[m[32m   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.[m
+[32m+[m[32m   See the License for the specific language governing permissions and[m
+[32m+[m[32m   limitations under the License.[m
+[1mdiff --git a/README.md b/README.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a53dd3d[m
+[1m--- /dev/null[m
+[1m+++ b/README.md[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32m# xWeather[m
+\ No newline at end of file[m
