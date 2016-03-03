@@ -27,7 +27,7 @@ public class City {
 		return code;
 	}
 	
-	public void getCode(String code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 	

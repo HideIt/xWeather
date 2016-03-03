@@ -20,7 +20,7 @@ public class XWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "id integer primary key autoincrement, "
 			+ "county_name text, "
 			+ "county_code text, "
-			+ "city_code integer )";
+			+ "city_id integer )";
 	
 	public XWeatherOpenHelper(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);

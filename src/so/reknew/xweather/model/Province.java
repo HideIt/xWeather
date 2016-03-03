@@ -26,7 +26,7 @@ public class Province {
 		return code;
 	}
 	
-	public void getCode(String code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 }
