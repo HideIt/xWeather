@@ -43,7 +43,7 @@ public class XWeatherDB {
 	}
 	
 	//∂¡»°province
-	public List<Province> loadPronvinces() {
+	public List<Province> loadPronvince() {
 		List<Province> list = new ArrayList<Province>();
 		Cursor cursor = db.query("Province", null, null, null, null, null, null);
 		if(cursor.moveToFirst()) {
@@ -70,7 +70,7 @@ public class XWeatherDB {
 	}
 	
 	//∂¡»°city
-	public List<City> loadCities(int provinceId) {
+	public List<City> loadCity(int provinceId) {
 		List<City> list = new ArrayList<City>();
 		Cursor cursor = db.query("City", null, "province_id = ?",
 				new String[]{String.valueOf(provinceId)}, null, null, null, null);
