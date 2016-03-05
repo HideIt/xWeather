@@ -57,6 +57,8 @@ public class ChooseAreaActivity extends Activity {
 				android.R.layout.simple_list_item_1, dataList);
 		listView.setAdapter(adapter);
 		xWeatherDB = XWeatherDB.getInstance(this);
+		
+		queryProvinces();
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			
 			@Override
@@ -71,21 +73,23 @@ public class ChooseAreaActivity extends Activity {
 				}
 			}
 		});
-		queryProvinces();
 	}
 
 	private void queryProvinces() {
+		android.util.Log.d("MINE", "ChooseAreaActivity.queryProvinces()");
 		provinceList = xWeatherDB.loadPronvince();
 		if(provinceList.size() > 0) {
-			dataList.clear();
+			android.util.Log.d("MINE", "provinceList.size() > 0");
+			dataList.clear();//remove all elements of this List
 			for(Province province : provinceList) {
-				dataList.add(province.getName());
+				dataList.add(province.getName());//add provinces name into dataList
 			}
-			adapter.notifyDataSetChanged();
+			adapter.notifyDataSetChanged();//notify View to refresh
 			listView.setSelection(0);
 			titleText.setText("China");
 			currentLevel = LEVEL_PROVINCE;
 		} else {
+			android.util.Log.d("MINE", "provinceList.size() not > 0");
 			queryFromServer(null, "province");
 		}
 	}
@@ -123,10 +127,13 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	private void queryFromServer(final String code, final String type) {
+		android.util.Log.d("MINE", "queryFromServer()");
 		String address;
 		if(!TextUtils.isEmpty(code)) {
+			android.util.Log.d("MINE", "query city/county data");
 			address = "http://www.weather.com.cn/data/list3/city" + code + ".xml";
 		} else {
+			android.util.Log.d("MINE", "query province data");
 			address = "http://www.weather.com.cn/data/list3/city.xml";
 		}
 		showProgressDialog();
@@ -134,17 +141,22 @@ public class ChooseAreaActivity extends Activity {
 			
 			@Override
 			public void onFinish(String response) {
+				android.util.Log.d("MINE", "HttpCallbackListener() onFinish()");
 				boolean result = false;
 				if("province".equals(type)) {
+					android.util.Log.d("MINE", "query province");
 					result = Utility.handleProvincesResponse(xWeatherDB, response);
 				} else if("city".equals(type)) {
+					android.util.Log.d("MINE", "query city");
 					result = Utility.handleCitiesResponse(xWeatherDB, response,
 							selectedProvince.getId());
 				} else if("county".equals(type)) {
+					android.util.Log.d("MINE", "query county");
 					result = Utility.handleCountiesResponse(xWeatherDB, response,
 							selectedCity.getId());
 				}
 				if(result) {
+					android.util.Log.d("MINE", "onFinish() result true");
 					runOnUiThread(new Runnable() {
 						
 						@Override

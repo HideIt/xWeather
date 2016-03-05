@@ -10,18 +10,27 @@ public class Utility {
 	public synchronized static boolean handleProvincesResponse
 	(XWeatherDB xWeatherDB, String response) {
 		if(!TextUtils.isEmpty(response)) {
-			String[] allPronvinces = response.split(",");
-			if(allPronvinces != null && allPronvinces.length > 0) {
-				for(String p:allPronvinces) {
+			android.util.Log.d("MINE", "handleProvinceResponse() response not empty");
+			android.util.Log.d("MINE", "response data:"+response);
+			String[] allProvinces = response.split(",");
+			android.util.Log.d("MINE", "all provinces data:"+allProvinces);
+			if(allProvinces != null && allProvinces.length > 0) {
+				android.util.Log.d("MINE", "allProvince not null && > 0");
+				for(String p:allProvinces) {
+					android.util.Log.d("MINE", "String p:allProvinces -> p:"+p);
 					String[] array = p.split("\\|");
 					Province province = new Province();
 					province.setName(array[0]);
+					android.util.Log.d("MINE", ""+province.getName());
 					province.setCode(array[1]);
+					android.util.Log.d("MINE", ""+province.getCode());
 					xWeatherDB.saveProvince(province);
 				}
+				android.util.Log.d("MINE", "will return true");
 				return true;
 			}
 		}
+		android.util.Log.d("MINE", "will return false");
 		return false;
 	}
 	
