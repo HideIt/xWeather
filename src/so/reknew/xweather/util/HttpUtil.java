@@ -9,12 +9,12 @@ import java.net.URL;
 public class HttpUtil {
 
 	public static void sendHttpRequest(final String address, final HttpCallbackListener listener) {
-		android.util.Log.d("MINE", "HttpUtil.sendHttpRequest()");
+		P.d("sendHttpRequest(final String address, final HttpCallbackListener listener)");
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
-				android.util.Log.d("MINE", "sendHttpRequest() Runnable() run()");
+				P.d("sendHttpRequest() run()");
 				HttpURLConnection connection = null;
 				try {
 					URL url = new URL(address);
@@ -26,11 +26,12 @@ public class HttpUtil {
 					StringBuilder response = new StringBuilder();
 					String line;
 					while((line = reader.readLine()) != null) {
-						android.util.Log.d("MINE", "reader.readLine() != null");
+						P.d("(line = reader.readLine()) != null");
+						P.d("line="+line);
 						response.append(line);
 					}
 					if(listener != null) {
-						android.util.Log.d("MINE", "listener != null");
+						P.d("listener != null");
 						listener.onFinish(response.toString());
 					}
 				} catch(Exception e) {
@@ -40,7 +41,7 @@ public class HttpUtil {
 					}
 				} finally {
 					if(connection != null) {
-						android.util.Log.d("MINE", "connection != null");
+						P.d("connection != null");
 						connection.disconnect();
 					}
 				}

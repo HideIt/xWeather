@@ -26,41 +26,42 @@ public class XWeatherDB {
 	}
 	
 	public synchronized static XWeatherDB getInstance(Context context) {
-		android.util.Log.d("MINE", "XWeatherDB.getInstance(context)");
+		P.d("getInstance(Context context)");
 		if(xWeatherDB == null) {
+			P.d("xWeatherDB == null");
 			xWeatherDB = new XWeatherDB(context);
-			android.util.Log.d("MINE", "xWeatherDB == null");
 		}
 		return xWeatherDB;
 	}
 	
 	//¥Ê¥¢province
 	public void saveProvince(Province province) {
+		P.d("saveProvince(Province province)");
 		if(province != null) {
-			android.util.Log.d("MINE", "saveProvince() province != null");
+			P.d("province != null");
 			ContentValues values = new ContentValues();
-			values.put("pronvince_name", province.getName());
+			values.put("province_name", province.getName());
 			values.put("province_code", province.getCode());
 			db.insert("Province", null, values);
 		}
 	}
 	
 	//∂¡»°province
-	public List<Province> loadPronvince() {
-		android.util.Log.d("MINE", "XEwatherDB.loadProvince()");
+	public List<Province> loadProvince() {
+		P.d("loadProvince()");
 		List<Province> list = new ArrayList<Province>();
 		Cursor cursor = db.query("Province", null, null, null, null, null, null);
 		if(cursor.moveToFirst()) {
-			android.util.Log.d("MINE", "table Province has data");
+			P.d("cursor.moveToFirst()");
 			do {
 				Province province = new Province();
 				province.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				province.setName(cursor.getString(cursor.getColumnIndex("province_name")));
-				province.setCode(cursor.getString(cursor.getColumnIndex("pronvince_code")));
+				province.setCode(cursor.getString(cursor.getColumnIndex("province_code")));
 				list.add(province);
-				android.util.Log.d("MINE", "add a province data"+province);
 			} while(cursor.moveToNext());
 		}
+		P.d("list.zise()="+list.size());
 		return list;
 	}
 	
@@ -77,10 +78,12 @@ public class XWeatherDB {
 	
 	//∂¡»°city
 	public List<City> loadCity(int provinceId) {
+		P.d("loadCity(int provinceId)");
 		List<City> list = new ArrayList<City>();
 		Cursor cursor = db.query("City", null, "province_id = ?",
 				new String[]{String.valueOf(provinceId)}, null, null, null, null);
 		if(cursor.moveToFirst()) {
+			P.d("cursor.moveToFirst()");;
 			do {
 				City city = new City();
 				city.setId(cursor.getInt(cursor.getColumnIndex("id")));

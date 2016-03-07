@@ -1,5 +1,7 @@
 package so.reknew.xweather.activity;
 
+import so.reknew.xweather.util.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,6 @@ public class ChooseAreaActivity extends Activity {
 		
 		queryProvinces();
 		listView.setOnItemClickListener(new OnItemClickListener() {
-			
 			@Override
 			public void onItemClick(AdapterView<?> arg0,
 					View view, int index, long arg3) {
@@ -76,20 +77,20 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	private void queryProvinces() {
-		android.util.Log.d("MINE", "ChooseAreaActivity.queryProvinces()");
-		provinceList = xWeatherDB.loadPronvince();
+		P.d("queryProvinces()");
+		provinceList = xWeatherDB.loadProvince();
 		if(provinceList.size() > 0) {
-			android.util.Log.d("MINE", "provinceList.size() > 0");
+			P.d("provinceList.size() > 0");
 			dataList.clear();//remove all elements of this List
 			for(Province province : provinceList) {
 				dataList.add(province.getName());//add provinces name into dataList
 			}
+			P.d("dataList.size()="+dataList.size());
 			adapter.notifyDataSetChanged();//notify View to refresh
 			listView.setSelection(0);
 			titleText.setText("China");
 			currentLevel = LEVEL_PROVINCE;
 		} else {
-			android.util.Log.d("MINE", "provinceList.size() not > 0");
 			queryFromServer(null, "province");
 		}
 	}
@@ -97,8 +98,10 @@ public class ChooseAreaActivity extends Activity {
 	private void queryCities() {
 		cityList = xWeatherDB.loadCity(selectedProvince.getId());
 		if(cityList.size() > 0) {
+			P.d("cityList.size() > 0");
 			dataList.clear();
 			for(City city : cityList) {
+				P.d(city);
 				dataList.add(city.getName());
 			}
 			adapter.notifyDataSetChanged();
@@ -127,13 +130,12 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	private void queryFromServer(final String code, final String type) {
-		android.util.Log.d("MINE", "queryFromServer()");
+		P.d("queryFromServer(final String code, final String type)");
 		String address;
 		if(!TextUtils.isEmpty(code)) {
-			android.util.Log.d("MINE", "query city/county data");
+			P.d("!TextUtils.isEmpty(code)");
 			address = "http://www.weather.com.cn/data/list3/city" + code + ".xml";
 		} else {
-			android.util.Log.d("MINE", "query province data");
 			address = "http://www.weather.com.cn/data/list3/city.xml";
 		}
 		showProgressDialog();
@@ -141,28 +143,29 @@ public class ChooseAreaActivity extends Activity {
 			
 			@Override
 			public void onFinish(String response) {
-				android.util.Log.d("MINE", "HttpCallbackListener() onFinish()");
+				P.d("onFinish(String response)");
 				boolean result = false;
 				if("province".equals(type)) {
-					android.util.Log.d("MINE", "query province");
+					P.d("\"province\".equals(type)");
 					result = Utility.handleProvincesResponse(xWeatherDB, response);
 				} else if("city".equals(type)) {
-					android.util.Log.d("MINE", "query city");
+					P.d("\"city\".equals(type)");
 					result = Utility.handleCitiesResponse(xWeatherDB, response,
 							selectedProvince.getId());
 				} else if("county".equals(type)) {
-					android.util.Log.d("MINE", "query county");
+					P.d("\"county\".equals(type)");
 					result = Utility.handleCountiesResponse(xWeatherDB, response,
 							selectedCity.getId());
 				}
 				if(result) {
-					android.util.Log.d("MINE", "onFinish() result true");
+					P.d("result");
 					runOnUiThread(new Runnable() {
 						
 						@Override
 						public void run() {
 							closeProgressDialog();
 							if("province".equals(type)) {
+								P.d("\"province\".equals(type)");
 								queryProvinces();
 							} else if("city".equals(type)) {
 								queryCities();
@@ -191,6 +194,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 	
 	private void showProgressDialog() {
+		P.d("showProgressDialog()");
 		if(progressDialog == null) {
 			progressDialog = new ProgressDialog(this);
 			progressDialog.setMessage("Loading...");
@@ -200,6 +204,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 	
 	private void closeProgressDialog() {
+		P.d("closeProgressDialog()");
 		if(progressDialog != null) {
 			progressDialog.dismiss();
 		}

@@ -9,28 +9,28 @@ public class Utility {
 	
 	public synchronized static boolean handleProvincesResponse
 	(XWeatherDB xWeatherDB, String response) {
+		P.d("handleProvincesResponse(XWeatherDB xWeatherDB, String response)");
 		if(!TextUtils.isEmpty(response)) {
-			android.util.Log.d("MINE", "handleProvinceResponse() response not empty");
-			android.util.Log.d("MINE", "response data:"+response);
+			P.d("!TextUtils.isEmpty(response)");
+			P.d("-----response data:"+response);
 			String[] allProvinces = response.split(",");
-			android.util.Log.d("MINE", "all provinces data:"+allProvinces);
 			if(allProvinces != null && allProvinces.length > 0) {
-				android.util.Log.d("MINE", "allProvince not null && > 0");
+				P.d("allProvinces != null && allProvinces.length > 0");
 				for(String p:allProvinces) {
-					android.util.Log.d("MINE", "String p:allProvinces -> p:"+p);
+					P.d("-----String p:allProvinces");
+					P.d("p:"+p);
 					String[] array = p.split("\\|");
 					Province province = new Province();
 					province.setName(array[0]);
-					android.util.Log.d("MINE", ""+province.getName());
+					P.d("province.getName():"+province.getName());
 					province.setCode(array[1]);
-					android.util.Log.d("MINE", ""+province.getCode());
+					P.d("province.getCode():"+province.getCode());
 					xWeatherDB.saveProvince(province);
 				}
-				android.util.Log.d("MINE", "will return true");
+				P.d("-----save province data complete. will return true");
 				return true;
 			}
 		}
-		android.util.Log.d("MINE", "will return false");
 		return false;
 	}
 	
