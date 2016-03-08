@@ -50,6 +50,7 @@ public class ChooseAreaActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		P.d("onCreate(Bundle savedInstanceState)");
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
@@ -60,20 +61,23 @@ public class ChooseAreaActivity extends Activity {
 		listView.setAdapter(adapter);
 		xWeatherDB = XWeatherDB.getInstance(this);
 		
-		queryProvinces();
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0,
 					View view, int index, long arg3) {
+				P.d("onItemClick()");
 				if(currentLevel == LEVEL_PROVINCE) {
+					P.d("currentLevel == LEVEL_PROVINCE");
 					selectedProvince = provinceList.get(index);
 					queryCities();
 				} else if(currentLevel == LEVEL_CITY) {
+					P.d("currentLevel == LEVEL_CITY");
 					selectedCity = cityList.get(index);
 					queryCounties();
 				}
 			}
 		});
+		queryProvinces();
 	}
 
 	private void queryProvinces() {
@@ -85,7 +89,7 @@ public class ChooseAreaActivity extends Activity {
 			for(Province province : provinceList) {
 				dataList.add(province.getName());//add provinces name into dataList
 			}
-			P.d("dataList.size()="+dataList.size());
+			P.d("dataList.size():"+dataList.size());
 			adapter.notifyDataSetChanged();//notify View to refresh
 			listView.setSelection(0);
 			titleText.setText("China");
@@ -96,14 +100,15 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	private void queryCities() {
+		P.d("queryCities()");
 		cityList = xWeatherDB.loadCity(selectedProvince.getId());
 		if(cityList.size() > 0) {
 			P.d("cityList.size() > 0");
 			dataList.clear();
 			for(City city : cityList) {
-				P.d(city);
 				dataList.add(city.getName());
 			}
+			P.d("dataList.size():"+dataList.size());
 			adapter.notifyDataSetChanged();
 			listView.setSelection(0);
 			titleText.setText(selectedProvince.getName());
@@ -114,12 +119,15 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	private void queryCounties() {
+		P.d("queryCounties()");
 		countyList = xWeatherDB.loadCounty(selectedCity.getId());
 		if(countyList.size() > 0) {
+			P.d("countyList.size() > 0");
 			dataList.clear();
 			for(County county : countyList) {
 				dataList.add(county.getName());
 			}
+			P.d("dataList.size():"+dataList.size());
 			adapter.notifyDataSetChanged();
 			listView.setSelection(0);
 			titleText.setText(selectedCity.getName());
@@ -130,7 +138,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	private void queryFromServer(final String code, final String type) {
-		P.d("queryFromServer(final String code, final String type)");
+		P.d("queryFromServer()");
 		String address;
 		if(!TextUtils.isEmpty(code)) {
 			P.d("!TextUtils.isEmpty(code)");
@@ -138,6 +146,7 @@ public class ChooseAreaActivity extends Activity {
 		} else {
 			address = "http://www.weather.com.cn/data/list3/city.xml";
 		}
+		P.d("address:"+address);
 		showProgressDialog();
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
 			
@@ -158,18 +167,21 @@ public class ChooseAreaActivity extends Activity {
 							selectedCity.getId());
 				}
 				if(result) {
-					P.d("result");
+					P.d("result == true");
 					runOnUiThread(new Runnable() {
 						
 						@Override
 						public void run() {
+							P.d("run()");
 							closeProgressDialog();
 							if("province".equals(type)) {
 								P.d("\"province\".equals(type)");
 								queryProvinces();
 							} else if("city".equals(type)) {
+								P.d("\"city\".equals(type)");
 								queryCities();
 							} else if("county".equals(type)) {
+								P.d("\"county\".equals(type)");
 								queryCounties();
 							}
 						}
@@ -179,14 +191,15 @@ public class ChooseAreaActivity extends Activity {
 
 			@Override
 			public void onError(Exception e) {
+				P.d("onError(Exception e)");
 				runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
+						P.d("run()");
 						closeProgressDialog();
 						Toast.makeText(ChooseAreaActivity.this, "Load ERROR...",
 								Toast.LENGTH_SHORT).show();
-						
 					}
 				});
 			}
@@ -212,6 +225,7 @@ public class ChooseAreaActivity extends Activity {
 	
 	@Override
 	public void onBackPressed() {
+		P.d("onBackPressed()");
 		if(currentLevel == LEVEL_COUNTY) {
 			queryCities();
 		} else if(currentLevel == LEVEL_CITY) {

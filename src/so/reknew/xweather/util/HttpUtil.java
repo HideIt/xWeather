@@ -9,7 +9,7 @@ import java.net.URL;
 public class HttpUtil {
 
 	public static void sendHttpRequest(final String address, final HttpCallbackListener listener) {
-		P.d("sendHttpRequest(final String address, final HttpCallbackListener listener)");
+		P.d("sendHttpRequest()");
 		new Thread(new Runnable() {
 			
 			@Override
@@ -27,7 +27,7 @@ public class HttpUtil {
 					String line;
 					while((line = reader.readLine()) != null) {
 						P.d("(line = reader.readLine()) != null");
-						P.d("line="+line);
+						P.d("line=:"+line);
 						response.append(line);
 					}
 					if(listener != null) {
@@ -35,11 +35,12 @@ public class HttpUtil {
 						listener.onFinish(response.toString());
 					}
 				} catch(Exception e) {
-					android.util.Log.d("MINE", "catch()");
+					P.d("catch(Exception e)");
 					if(listener != null) {
 						listener.onError(e);
 					}
 				} finally {
+					P.d("HttpUtil->finally {}");
 					if(connection != null) {
 						P.d("connection != null");
 						connection.disconnect();

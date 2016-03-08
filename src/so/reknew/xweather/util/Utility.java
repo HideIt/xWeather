@@ -9,25 +9,22 @@ public class Utility {
 	
 	public synchronized static boolean handleProvincesResponse
 	(XWeatherDB xWeatherDB, String response) {
-		P.d("handleProvincesResponse(XWeatherDB xWeatherDB, String response)");
+		P.d("handleProvincesResponse()");
 		if(!TextUtils.isEmpty(response)) {
 			P.d("!TextUtils.isEmpty(response)");
-			P.d("-----response data:"+response);
+			P.d("----------response data:"+response);
 			String[] allProvinces = response.split(",");
 			if(allProvinces != null && allProvinces.length > 0) {
 				P.d("allProvinces != null && allProvinces.length > 0");
 				for(String p:allProvinces) {
-					P.d("-----String p:allProvinces");
-					P.d("p:"+p);
+					P.d("-----String p:"+p);
 					String[] array = p.split("\\|");
 					Province province = new Province();
-					province.setName(array[0]);
-					P.d("province.getName():"+province.getName());
-					province.setCode(array[1]);
-					P.d("province.getCode():"+province.getCode());
+					province.setCode(array[0]);
+					province.setName(array[1]);
 					xWeatherDB.saveProvince(province);
 				}
-				P.d("-----save province data complete. will return true");
+				P.d("----------save province data complete. will return true");
 				return true;
 			}
 		}
@@ -36,17 +33,22 @@ public class Utility {
 	
 	public static boolean handleCitiesResponse
 	(XWeatherDB xWeatherDB, String response, int provinceId) {
+		P.d("handleCitiesResponse()");
 		if(!TextUtils.isEmpty(response)) {
+			P.d("!TextUtils.isEmpty(response)");
 			String[] allCities = response.split(",");
 			if(allCities != null && allCities.length > 0) {
+				P.d("allCities != null && allCities.length > 0");
 				for(String c:allCities) {
+					P.d("-----String c:"+c);
 					String[] array = c.split("\\|");
 					City city = new City();
-					city.setName(array[0]);
-					city.setCode(array[1]);
+					city.setCode(array[0]);
+					city.setName(array[1]);
 					city.setProvinceId(provinceId);
 					xWeatherDB.saveCity(city);
 				}
+				P.d("----------save city data complete. will return true");
 				return true;
 			}
 		}
@@ -59,13 +61,15 @@ public class Utility {
 			String[] allCounties = response.split(",");
 			if(allCounties != null && allCounties.length > 0) {
 				for(String c:allCounties) {
+					P.d("-----String c:"+c);
 					String[] array = c.split("\\|");
 					County county = new County();
-					county.setName(array[0]);
-					county.setCode(array[1]);
+					county.setCode(array[0]);
+					county.setName(array[1]);
 					county.setCityId(cityId);
 					xWeatherDB.saveCounty(county);
 				}
+				P.d("----------save county data complete. will return true");
 				return true;
 			}
 		}

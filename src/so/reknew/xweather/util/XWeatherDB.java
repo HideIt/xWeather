@@ -14,13 +14,14 @@ import so.reknew.xweather.model.Province;
 
 public class XWeatherDB {
 	
-	public static final String DB_NAME = "xweather";
+	public static final String DB_NAME = "xweather.db";
 	public static final int VERSION = 1;
 	private static XWeatherDB xWeatherDB;
 	private SQLiteDatabase db;
 
 	//保证只有一个XWeatherDB的实例
 	private XWeatherDB(Context context) {
+		P.d("XWeatherDB(Context context)");
 		XWeatherOpenHelper dbHelper = new XWeatherOpenHelper(context, DB_NAME, null, VERSION);
 		db = dbHelper.getWritableDatabase();
 	}
@@ -38,7 +39,6 @@ public class XWeatherDB {
 	public void saveProvince(Province province) {
 		P.d("saveProvince(Province province)");
 		if(province != null) {
-			P.d("province != null");
 			ContentValues values = new ContentValues();
 			values.put("province_name", province.getName());
 			values.put("province_code", province.getCode());
@@ -67,6 +67,7 @@ public class XWeatherDB {
 	
 	//存储city
 	public void saveCity(City city) {
+		P.d("saveCity(City city)");
 		if(city != null) {
 			ContentValues values = new ContentValues();
 			values.put("city_name", city.getName());
@@ -93,11 +94,13 @@ public class XWeatherDB {
 				list.add(city);
 			} while(cursor.moveToNext());
 		}
+		P.d("list.zise()="+list.size());
 		return list;
 	}
 	
 	//存储county
 	public void saveCounty(County county) {
+		P.d("saveCounty(County county)");
 		if(county != null) {
 			ContentValues values = new ContentValues();
 			values.put("county_name", county.getName());
@@ -109,19 +112,22 @@ public class XWeatherDB {
 	
 	//读取county
 	public List<County> loadCounty(int cityId) {
+		P.d("loadCounty(int cityId)");
 		List<County> list = new ArrayList<County>();
 		Cursor cursor = db.query("County", null, "city_id = ?",
 				new String[]{String.valueOf(cityId)}, null, null, null, null);
 		if(cursor.moveToFirst()) {
+			P.d("cursor.moveToFirst()");
 			do {
 				County county = new County();
 				county.setId(cursor.getInt(cursor.getColumnIndex("id")));
-				county.setName(cursor.getString(cursor.getColumnIndex("city_name")));
-				county.setCode(cursor.getString(cursor.getColumnIndex("city_code")));
+				county.setName(cursor.getString(cursor.getColumnIndex("county_name")));
+				county.setCode(cursor.getString(cursor.getColumnIndex("county_code")));
 				county.setCityId(cityId);
 				list.add(county);
 			} while(cursor.moveToNext());
 		}
+		P.d("list.zise()="+list.size());
 		return list;
 	}
 }
